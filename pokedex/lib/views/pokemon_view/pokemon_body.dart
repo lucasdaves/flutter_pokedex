@@ -6,7 +6,7 @@ import 'package:pokedex/views/result_view/result_card.dart';
 class PokemonBody extends StatelessWidget {
   final double deviceWidth;
   final double deviceHeight;
-  Pokemon pokemon;
+  final Pokemon pokemon;
 
   PokemonBody({
     required this.deviceWidth,

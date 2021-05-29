@@ -1,7 +1,7 @@
 class ListPokemon {
   late int count;
   late String next;
-  late Null previous;
+  late String previous;
   late List<Results> results;
 
   ListPokemon({
@@ -13,10 +13,10 @@ class ListPokemon {
 
   ListPokemon.fromJson(Map<String, dynamic> json) {
     count = json['count'];
-    next = json['next'];
-    previous = json['previous'];
+    next = json['next'].toString();
+    previous = json['previous'].toString();
     if (json['results'] != null) {
-      List<Results> results = [];
+      results = <Results>[];
       json['results'].forEach((v) {
         results.add(new Results.fromJson(v));
       });

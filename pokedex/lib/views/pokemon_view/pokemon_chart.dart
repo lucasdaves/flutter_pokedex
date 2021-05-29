@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
 
 class BarChartSample3 extends StatefulWidget {
-  late Pokemon pokemon;
+  final Pokemon pokemon;
 
   BarChartSample3({
     required this.pokemon,

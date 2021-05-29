@@ -97,7 +97,13 @@ class _HomeBodyState extends State<HomeBody> {
               fontSize: 22,
               color: Colors.deepPurple,
               text: 'POKEVERSO',
-              onClick: () {},
+              onClick: () {
+                Navigator.pushNamed(
+                  context,
+                  '/result_page',
+                  arguments: 'todos',
+                );
+              },
             ),
             SizedBox(
               width: widget.deviceWidth * 0.9,
@@ -110,7 +116,7 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.yellow.shade700,
               text: 'FAVORITOS',
               onClick: () {
-                print('alo cowboy');
+                print('em progresso');
               },
             ),
           ],

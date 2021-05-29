@@ -27,26 +27,22 @@ class PokemonBloc extends BlocBase {
     pokemonStream = BehaviorSubject<List<Pokemon>>();
 
     ListPokemon pokemonList = await Api.getPokemonList();
+    pokemon.clear();
 
-    //print(pokemonList.count);
-    //print(pokemonList.results[0].name);
-
-/*
     for (int i = 0; i < pokemonList.results.length; i++) {
       PokemonModel pokemon_model =
           await Api.getPokemon(pokemonList.results[i].name.toString());
       EvolutionModel evolution_model =
           await Api.getEvolution(pokemon_model.species.url);
 
-      pokemon.clear();
       pokemon.add(Pokemon.createPokemon(pokemon_model, evolution_model));
-      pokemonStream.sink.add(pokemon);
     }
-    */
+    pokemonStream.sink.add(pokemon);
   }
 
   @override
   void dispose() {
     pokemonStream.close();
+    super.dispose();
   }
 }

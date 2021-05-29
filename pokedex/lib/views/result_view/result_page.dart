@@ -13,6 +13,7 @@ class ResultPage extends StatefulWidget {
 class _ResultPageState extends State<ResultPage> {
   final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
   bool error = false;
+  bool pagination = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +23,17 @@ class _ResultPageState extends State<ResultPage> {
     String text =
         ModalRoute.of(context)!.settings.arguments.toString().toLowerCase();
 
-    pokemonBloc.streamMultiplePokemon();
-
-    pokemonBloc.streamSinglePokemon(text).catchError((_) {
-      if (mounted) {
-        setState(() {
-          error = true;
-        });
-      }
-    });
+    if (text == 'todos') {
+      pokemonBloc.streamMultiplePokemon().then((value) => pagination = true);
+    } else {
+      pokemonBloc.streamSinglePokemon(text).catchError((_) {
+        if (mounted) {
+          setState(() {
+            error = true;
+          });
+        }
+      });
+    }
 
     return StreamBuilder<List<Pokemon>>(
         stream: pokemonBloc.pokemonStream.stream,
@@ -48,6 +51,7 @@ class _ResultPageState extends State<ResultPage> {
                 barSubTitleSize: 16,
                 barIconColor: Colors.indigo.shade900,
                 barIconSize: 40,
+                pagination: false,
               ),
               body: Container(
                 width: deviceWidth,
@@ -78,12 +82,12 @@ class _ResultPageState extends State<ResultPage> {
                   barTitle: 'Resultado da Pesquisa', //Alterar com API
                   barTitleColor: Colors.indigo.shade900,
                   barTitleSize: 18,
-                  barSubTitle:
-                      snapshot.data![0].pokemon_model.name, //Alterar com API
+                  barSubTitle: text, //Alterar com API
                   barSubTitleColor: Colors.grey,
                   barSubTitleSize: 16,
                   barIconColor: Colors.indigo.shade900,
                   barIconSize: 40,
+                  pagination: pagination,
                 ),
                 body: ResultBody(
                   deviceWidth: deviceWidth,
@@ -104,6 +108,7 @@ class _ResultPageState extends State<ResultPage> {
                   barSubTitleSize: 16,
                   barIconColor: Colors.indigo.shade900,
                   barIconSize: 40,
+                  pagination: false,
                 ),
                 body: Container(
                   alignment: Alignment.center,
