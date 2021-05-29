@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.dart';
-import 'package:pokedex/widgets/result_card.dart';
+import 'package:pokedex/views/result_view/result_card.dart';
 
-class ResultFunctions extends StatelessWidget {
+class ResultBody extends StatelessWidget {
   final double deviceWidth;
   final double deviceHeight;
   final List<Pokemon> pokemon;
 
-  ResultFunctions({
+  ResultBody({
     required this.deviceWidth,
     required this.deviceHeight,
     required this.pokemon,
@@ -20,9 +20,7 @@ class ResultFunctions extends StatelessWidget {
       itemCount: pokemon.length,
       itemBuilder: (BuildContext context, int index) {
         return ResultCard(
-          pokemonImage: AssetImage(pokemon[index].pokemonImage.toString()),
-          pokemonName: pokemon[index].pokemonName.toString(),
-          pokemonType: pokemon[index].pokemonType.toString(),
+          pokemon: pokemon[index],
         );
       },
     );

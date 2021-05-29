@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/models/pokemon.dart';
 
 class ResultCard extends StatelessWidget {
-  final AssetImage pokemonImage;
-  final String pokemonName;
-  final String pokemonType;
+  final Pokemon pokemon;
 
   ResultCard({
-    required this.pokemonImage,
-    required this.pokemonName,
-    required this.pokemonType,
+    required this.pokemon,
   });
 
   @override
@@ -18,7 +15,7 @@ class ResultCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/pokemon_page');
+        Navigator.pushNamed(context, '/pokemon_page', arguments: pokemon);
       },
       child: SizedBox(
         width: deviceWidth,
@@ -37,14 +34,15 @@ class ResultCard extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 35,
                       backgroundColor: Colors.white,
-                      backgroundImage: pokemonImage,
+                      backgroundImage: NetworkImage(
+                          pokemon.pokemon_model.sprites.frontDefault),
                     ),
                   ),
                 ),
                 Flexible(
                   child: ListTile(
                     title: Text(
-                      pokemonName,
+                      pokemon.pokemon_model.name,
                       style: TextStyle(
                         color: Colors.redAccent.shade400,
                         fontSize: 20,
@@ -52,7 +50,7 @@ class ResultCard extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'Tipo: $pokemonType',
+                      'Tipo: ${pokemon.pokemon_model.types[0].type.name}',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,

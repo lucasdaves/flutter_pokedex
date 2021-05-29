@@ -1,34 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:pokedex/widgets/home_button.dart';
-import 'package:pokedex/widgets/home_textfield.dart';
+import 'package:pokedex/views/home_view/home_button.dart';
+import 'package:pokedex/views/home_view/home_textfield.dart';
 
-class HomeFunctions extends StatelessWidget {
+class HomeBody extends StatefulWidget {
   final double deviceWidth;
   final double deviceHeight;
 
-  HomeFunctions({
+  HomeBody({
     required this.deviceWidth,
     required this.deviceHeight,
   });
+
+  @override
+  _HomeBodyState createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  final textfildController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        width: deviceWidth * 0.9,
-        height: deviceHeight * 0.7,
+        width: widget.deviceWidth * 0.9,
+        height: widget.deviceHeight * 0.7,
         padding: EdgeInsets.all(20),
         color: Colors.white,
         child: Column(
           children: <Widget>[
             SizedBox(
-              width: deviceWidth * 0.9,
-              height: deviceHeight * 0.03,
+              width: widget.deviceWidth * 0.9,
+              height: widget.deviceHeight * 0.03,
             ),
             SizedBox(
-              width: deviceWidth * 0.8,
-              height: deviceHeight * 0.07,
+              width: widget.deviceWidth * 0.8,
+              height: widget.deviceHeight * 0.07,
               child: Text(
                 'Conheça a Pokedex',
                 textAlign: TextAlign.start,
@@ -40,8 +47,8 @@ class HomeFunctions extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: deviceWidth * 0.8,
-              height: deviceHeight * 0.1,
+              width: widget.deviceWidth * 0.8,
+              height: widget.deviceHeight * 0.1,
               child: Text(
                 'Utilize a pokedex para encontrar mais informações sobre seus pokemons.',
                 textAlign: TextAlign.start,
@@ -53,47 +60,52 @@ class HomeFunctions extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: deviceWidth * 0.9,
-              height: deviceHeight * 0.05,
+              width: widget.deviceWidth * 0.9,
+              height: widget.deviceHeight * 0.05,
             ),
             HomeTextField(
+              controller: textfildController,
               textLabel: 'Digite o nome do pokemon',
-              width: deviceWidth * 0.8,
-              height: deviceHeight * 0.06,
+              width: widget.deviceWidth * 0.8,
+              height: widget.deviceHeight * 0.06,
             ),
             SizedBox(
-              width: deviceWidth * 0.9,
-              height: deviceHeight * 0.1,
+              width: widget.deviceWidth * 0.9,
+              height: widget.deviceHeight * 0.1,
             ),
             FunctionButton(
-              width: deviceWidth * 0.8,
-              height: deviceHeight * 0.06,
+              width: widget.deviceWidth * 0.8,
+              height: widget.deviceHeight * 0.06,
               fontSize: 22,
               color: Colors.indigo.shade900,
               text: 'PESQUISAR',
               onClick: () {
-                Navigator.pushNamed(context, '/result_page');
+                Navigator.pushNamed(
+                  context,
+                  '/result_page',
+                  arguments: textfildController.text,
+                );
               },
             ),
             SizedBox(
-              width: deviceWidth * 0.9,
-              height: deviceHeight * 0.02,
+              width: widget.deviceWidth * 0.9,
+              height: widget.deviceHeight * 0.02,
             ),
             FunctionButton(
-              width: deviceWidth * 0.8,
-              height: deviceHeight * 0.06,
+              width: widget.deviceWidth * 0.8,
+              height: widget.deviceHeight * 0.06,
               fontSize: 22,
               color: Colors.deepPurple,
               text: 'POKEVERSO',
               onClick: () {},
             ),
             SizedBox(
-              width: deviceWidth * 0.9,
-              height: deviceHeight * 0.02,
+              width: widget.deviceWidth * 0.9,
+              height: widget.deviceHeight * 0.02,
             ),
             FunctionButton(
-              width: deviceWidth * 0.8,
-              height: deviceHeight * 0.06,
+              width: widget.deviceWidth * 0.8,
+              height: widget.deviceHeight * 0.06,
               fontSize: 22,
               color: Colors.yellow.shade700,
               text: 'FAVORITOS',

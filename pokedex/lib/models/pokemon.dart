@@ -1,25 +1,20 @@
+import 'evolution_model.dart';
+import 'pokemon_model.dart';
+
 class Pokemon {
-  String? pokemonName;
-  String? pokemonType;
-  String? pokemonImage;
+  late PokemonModel pokemon_model;
+  late EvolutionModel evolution_model;
 
   Pokemon({
-    this.pokemonName,
-    this.pokemonType,
-    this.pokemonImage,
+    required this.pokemon_model,
+    required this.evolution_model,
   });
 
-  Pokemon.fromJson(Map<String, dynamic> json) {
-    pokemonName = json['pokemonName'];
-    pokemonType = json['pokemonType'];
-    pokemonImage = json['pokemonImage'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pokemonName'] = this.pokemonName;
-    data['pokemonType'] = this.pokemonType;
-    data['pokemonImage'] = this.pokemonImage;
-    return data;
+  static Pokemon createPokemon(pokemon_model, evolution_model) {
+    Pokemon pokemon = Pokemon(
+      pokemon_model: pokemon_model,
+      evolution_model: evolution_model,
+    );
+    return pokemon;
   }
 }

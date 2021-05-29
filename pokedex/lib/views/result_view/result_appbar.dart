@@ -28,9 +28,9 @@ class ResultBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      iconTheme: IconThemeData(
-        color: barIconColor,
-        size: barIconSize,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: barIconColor, size: barIconSize),
+        onPressed: () => Navigator.pop(context),
       ),
       backgroundColor: barColor,
       centerTitle: false,

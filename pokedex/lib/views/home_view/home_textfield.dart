@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class HomeTextField extends StatelessWidget {
+  final TextEditingController controller;
   final String textLabel;
   final double width;
   final double height;
 
   HomeTextField({
+    required this.controller,
     required this.textLabel,
     required this.width,
     required this.height,
@@ -13,8 +15,6 @@ class HomeTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _textController = TextEditingController();
-
     return SizedBox(
       width: width,
       height: height,
@@ -37,7 +37,7 @@ class HomeTextField extends StatelessWidget {
           alignment: Alignment.center,
           margin: EdgeInsets.fromLTRB(width * 0.1, 0, 0, 0),
           child: TextField(
-            controller: _textController,
+            controller: controller,
             decoration: InputDecoration(
               hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
               hintText: textLabel,

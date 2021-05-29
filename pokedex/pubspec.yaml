@@ -24,6 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_bloc:
+  bloc:
+  bloc_pattern:
   fl_chart:
   http:
   rxdart:

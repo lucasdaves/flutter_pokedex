@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
-  final AssetImage pokemonImage;
+  final NetworkImage pokemonImage;
   final double barHeight;
   final Color barColor;
   final String barTitle;
@@ -39,6 +39,21 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(barIcon, size: barIconSize),
         onPressed: () => Navigator.pushNamed(context, '/home_page'),
       ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.star_border, size: barIconSize, color: barIconColor),
+          onPressed: () {
+            final snackBar = SnackBar(
+              content: Text('Pokemon Favoritado !'),
+              action: SnackBarAction(
+                label: 'Minimizar',
+                onPressed: () {},
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          },
+        ),
+      ],
       flexibleSpace: Padding(
         padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
         child: Row(
@@ -51,7 +66,7 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
                 foregroundColor: Colors.white,
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundColor: barColor,
+                  backgroundColor: Colors.redAccent.shade100,
                   backgroundImage: pokemonImage,
                 ),
               ),
@@ -77,22 +92,6 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               ],
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(50, 80, 0, 0),
-              child: IconButton(
-                  icon: Icon(Icons.star_border,
-                      size: barIconSize, color: barIconColor),
-                  onPressed: () {
-                    final snackBar = SnackBar(
-                      content: Text('Pokemon Favoritado !'),
-                      action: SnackBarAction(
-                        label: 'Minimizar',
-                        onPressed: () {},
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }),
             ),
           ],
         ),
