@@ -1,4 +1,6 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex/controllers/bloc/pokemon_bloc.dart';
 import 'package:pokedex/views/home_view/home_body.dart';
 
 class HomePage extends StatefulWidget {

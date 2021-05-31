@@ -1,4 +1,6 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex/controllers/bloc/pokemon_bloc.dart';
 import 'package:pokedex/views/home_view/home_button.dart';
 import 'package:pokedex/views/home_view/home_textfield.dart';
 
@@ -20,6 +22,8 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
+    final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
@@ -80,11 +84,22 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.indigo.shade900,
               text: 'PESQUISAR',
               onClick: () {
-                Navigator.pushNamed(
-                  context,
-                  '/result_page',
-                  arguments: textfildController.text,
-                );
+                if (textfildController.text.isNotEmpty) {
+                  Navigator.pushNamed(
+                    context,
+                    '/result_page',
+                    arguments: textfildController.text,
+                  );
+                } else {
+                  final snackBar = SnackBar(
+                    content: Text('Digite o nome do pokemon !'),
+                    action: SnackBarAction(
+                      label: 'Minimizar',
+                      onPressed: () {},
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               },
             ),
             SizedBox(
@@ -116,7 +131,16 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.yellow.shade700,
               text: 'FAVORITOS',
               onClick: () {
-                print('em progresso');
+                if (pokemonBloc.favorite_pokemons.isEmpty) {
+                  final snackBar = SnackBar(
+                    content: Text('Você não tem pokemons favoritados !'),
+                    action: SnackBarAction(
+                      label: 'Minimizar',
+                      onPressed: () {},
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               },
             ),
           ],

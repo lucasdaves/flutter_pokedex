@@ -37,9 +37,9 @@ class Api {
     }
   }
 
-  static Future<ListPokemon> getPokemonList() async {
+  static Future<ListPokemon> getPokemonList(String search) async {
     var response =
-        await http.get(Uri.parse("https://pokeapi.co/api/v2/pokemon/"));
+        await http.get(Uri.parse("https://pokeapi.co/api/v2/pokemon/$search"));
     if (response.statusCode == 200) {
       ListPokemon listPokemon =
           ListPokemon.fromJson(json.decode(response.body));
@@ -61,14 +61,12 @@ class Api {
       for (var evolution2 in evolution1.evolvesTo) {
         pokemon_model = await Api.getPokemon(evolution2.species.name);
         evolution_model = await Api.getEvolution(pokemon_model.species.url);
-        //evolution_chain = await getEvolution(evolution_model);
 
         chain.add(Pokemon.createPokemon(
             pokemon_model, evolution_model, evolution_chain));
       }
       pokemon_model = await Api.getPokemon(evolution1.species.name);
       evolution_model = await Api.getEvolution(pokemon_model.species.url);
-      //evolution_chain = await getEvolution(evolution_model);
 
       chain.add(Pokemon.createPokemon(
           pokemon_model, evolution_model, evolution_chain));
@@ -76,7 +74,6 @@ class Api {
 
     pokemon_model = await Api.getPokemon(object.chain.species.name);
     evolution_model = await Api.getEvolution(pokemon_model.species.url);
-    //evolution_chain = await getEvolution(evolution_model);
 
     chain.add(
         Pokemon.createPokemon(pokemon_model, evolution_model, evolution_chain));

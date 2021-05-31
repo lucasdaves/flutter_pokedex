@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResultBar extends StatelessWidget implements PreferredSizeWidget {
+  final String barCounter;
   final double barHeight;
   final Color barColor;
   final String barTitle;
@@ -12,8 +13,11 @@ class ResultBar extends StatelessWidget implements PreferredSizeWidget {
   final Color barIconColor;
   final double barIconSize;
   final bool pagination;
+  final Function leftAction;
+  final Function rightAction;
 
   ResultBar({
+    required this.barCounter,
     required this.barHeight,
     required this.barColor,
     required this.barTitle,
@@ -25,10 +29,15 @@ class ResultBar extends StatelessWidget implements PreferredSizeWidget {
     required this.barIconColor,
     required this.barIconSize,
     required this.pagination,
+    required this.leftAction,
+    required this.rightAction,
   });
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
+    double deviceHeight = MediaQuery.of(context).size.height;
+
     if (pagination == true) {
       return AppBar(
         leading: IconButton(
@@ -36,15 +45,36 @@ class ResultBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () => Navigator.pop(context),
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.arrow_left_rounded,
-                color: barIconColor, size: barIconSize),
-            onPressed: () => Navigator.pop(context),
-          ),
-          IconButton(
-            icon: Icon(Icons.arrow_right_rounded,
-                color: barIconColor, size: barIconSize),
-            onPressed: () => Navigator.pop(context),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, deviceWidth * 0.02, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_down_sharp,
+                      color: barIconColor, size: barIconSize),
+                  onPressed: () => leftAction(),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      deviceWidth * 0.02, deviceHeight * 0.01, 0, 0),
+                  child: Text(
+                    barCounter,
+                    style: TextStyle(
+                      color: barTitleColor,
+                      fontSize: barTitleSize,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_circle_up_sharp,
+                      color: barIconColor, size: barIconSize),
+                  onPressed: () => rightAction(),
+                ),
+              ],
+            ),
           ),
         ],
         backgroundColor: barColor,

@@ -14,17 +14,40 @@ class _ResultPageState extends State<ResultPage> {
   final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
   bool error = false;
   bool pagination = false;
+  bool firstRequest = true;
+  int pageIndex = 0;
+  int pageLimit = 10;
 
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
+    int pageOffset = pageLimit * pageIndex;
+
     String text =
         ModalRoute.of(context)!.settings.arguments.toString().toLowerCase();
 
+    void changePage(int index) {
+      pageIndex = index;
+      pageOffset = pageLimit * pageIndex;
+
+      String search = '?offset=$pageOffset&limit=10';
+
+      if (mounted) {
+        setState(() {
+          pokemonBloc
+              .streamMultiplePokemon(search)
+              .then((value) => pagination = true);
+        });
+      }
+    }
+
     if (text == 'todos') {
-      pokemonBloc.streamMultiplePokemon().then((value) => pagination = true);
+      if (firstRequest == true) {
+        changePage(pageIndex);
+        firstRequest = false;
+      }
     } else {
       pokemonBloc.streamSinglePokemon(text).catchError((_) {
         if (mounted) {
@@ -41,6 +64,7 @@ class _ResultPageState extends State<ResultPage> {
           if (error) {
             return Scaffold(
               appBar: ResultBar(
+                barCounter: (pageIndex + 1).toString(),
                 barHeight: deviceHeight * 0.12,
                 barColor: Colors.white,
                 barTitle: 'Resultado da Pesquisa', //Alterar com API
@@ -51,7 +75,9 @@ class _ResultPageState extends State<ResultPage> {
                 barSubTitleSize: 16,
                 barIconColor: Colors.indigo.shade900,
                 barIconSize: 40,
-                pagination: false,
+                pagination: pagination,
+                leftAction: () {},
+                rightAction: () {},
               ),
               body: Container(
                 width: deviceWidth,
@@ -74,9 +100,10 @@ class _ResultPageState extends State<ResultPage> {
               ),
             );
           } else {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && pagination == true) {
               return Scaffold(
                 appBar: ResultBar(
+                  barCounter: (pageIndex + 1).toString(),
                   barHeight: deviceHeight * 0.12,
                   barColor: Colors.white,
                   barTitle: 'Resultado da Pesquisa', //Alterar com API
@@ -88,6 +115,25 @@ class _ResultPageState extends State<ResultPage> {
                   barIconColor: Colors.indigo.shade900,
                   barIconSize: 40,
                   pagination: pagination,
+                  leftAction: () {
+                    if (pageIndex > 0) {
+                      pagination = false;
+                      changePage(--pageIndex);
+                    } else {
+                      final snackBar = SnackBar(
+                        content: Text('Pagina inicial'),
+                        action: SnackBarAction(
+                          label: 'Minimizar',
+                          onPressed: () {},
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  },
+                  rightAction: () {
+                    pagination = false;
+                    changePage(++pageIndex);
+                  },
                 ),
                 body: ResultBody(
                   deviceWidth: deviceWidth,
@@ -98,6 +144,7 @@ class _ResultPageState extends State<ResultPage> {
             } else {
               return Scaffold(
                 appBar: ResultBar(
+                  barCounter: (pageIndex + 1).toString(),
                   barHeight: deviceHeight * 0.12,
                   barColor: Colors.white,
                   barTitle: 'Resultado da Pesquisa', //Alterar com API
@@ -108,7 +155,9 @@ class _ResultPageState extends State<ResultPage> {
                   barSubTitleSize: 16,
                   barIconColor: Colors.indigo.shade900,
                   barIconSize: 40,
-                  pagination: false,
+                  pagination: pagination,
+                  leftAction: () {},
+                  rightAction: () {},
                 ),
                 body: Container(
                   alignment: Alignment.center,

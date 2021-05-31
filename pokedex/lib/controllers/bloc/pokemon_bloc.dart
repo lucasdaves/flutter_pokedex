@@ -7,23 +7,23 @@ import 'package:pokedex/controllers/api/api.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PokemonBloc extends BlocBase {
-  late List<Pokemon> pokemon = [];
+  late List<Pokemon> pokemons = [];
+  late List<String> favorite_pokemons = [];
 
-  late var pokemonStream = BehaviorSubject<List<Pokemon>>();
+  late dynamic pokemonStream = BehaviorSubject<List<Pokemon>>();
 
-  Future<void> streamSinglePokemon(String text) async {
+  Future<void> streamSinglePokemon(String search) async {
     pokemonStream = BehaviorSubject<List<Pokemon>>();
 
     PokemonModel pokemon_model;
     EvolutionModel evolution_model;
     List<Pokemon> evolution_chain = [];
 
-    pokemon_model = await Api.getPokemon(text);
+    pokemon_model = await Api.getPokemon(search);
     evolution_model = await Api.getEvolution(pokemon_model.species.url);
-    //evolution_chain = await Api.getChain(evolution_model);
 
-    pokemon.clear();
-    pokemon.add(
+    pokemons.clear();
+    pokemons.add(
       Pokemon.createPokemon(
         pokemon_model,
         evolution_model,
@@ -31,29 +31,33 @@ class PokemonBloc extends BlocBase {
       ),
     );
 
-    pokemonStream.sink.add(pokemon);
+    pokemonStream.sink.add(pokemons);
   }
 
-  Future<void> streamMultiplePokemon() async {
+  Future<void> streamMultiplePokemon(String search) async {
     pokemonStream = BehaviorSubject<List<Pokemon>>();
 
-    pokemon.clear();
+    pokemons.clear();
 
     PokemonModel pokemon_model;
     EvolutionModel evolution_model;
     List<Pokemon> evolution_chain = [];
 
-    ListPokemon pokemonList = await Api.getPokemonList();
+    ListPokemon pokemonList = await Api.getPokemonList(search);
 
     for (int i = 0; i < pokemonList.results.length; i++) {
       pokemon_model = await Api.getPokemon(pokemonList.results[i].name);
       evolution_model = await Api.getEvolution(pokemon_model.species.url);
-      //evolution_chain = await Api.getChain(evolution_model);
 
-      pokemon.add(Pokemon.createPokemon(
-          pokemon_model, evolution_model, evolution_chain));
+      pokemons.add(
+        Pokemon.createPokemon(
+          pokemon_model,
+          evolution_model,
+          evolution_chain,
+        ),
+      );
     }
-    pokemonStream.sink.add(pokemon);
+    pokemonStream.sink.add(pokemons);
   }
 
   @override
