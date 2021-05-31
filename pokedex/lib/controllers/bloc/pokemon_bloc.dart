@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 
 class PokemonBloc extends BlocBase {
   late List<Pokemon> pokemon = [];
+  late List<Pokemon> pokemonEvolution = [];
 
   late var pokemonStream = BehaviorSubject<List<Pokemon>>();
 
@@ -18,8 +19,21 @@ class PokemonBloc extends BlocBase {
     EvolutionModel evolution_model =
         await Api.getEvolution(pokemon_model.species.url);
 
+    pokemonEvolution.clear();
     pokemon.clear();
-    pokemon.add(Pokemon.createPokemon(pokemon_model, evolution_model));
+
+    for (var evolution1 in evolution_model.chain.evolvesTo) {
+      if (evolution1 != null) {
+        for (var evolution2 in evolution1.evolvesTo) {
+          getEvolution(evolution2.species.name);
+        }
+      }
+      getEvolution(evolution1.species.name);
+    }
+
+    pokemon.add(Pokemon.createPokemon(
+        pokemon_model, evolution_model, pokemonEvolution));
+
     pokemonStream.sink.add(pokemon);
   }
 
@@ -35,9 +49,19 @@ class PokemonBloc extends BlocBase {
       EvolutionModel evolution_model =
           await Api.getEvolution(pokemon_model.species.url);
 
-      pokemon.add(Pokemon.createPokemon(pokemon_model, evolution_model));
+      pokemon.add(Pokemon.createPokemon(
+          pokemon_model, evolution_model, pokemonEvolution));
     }
     pokemonStream.sink.add(pokemon);
+  }
+
+  Future<void> getEvolution(String text) async {
+    PokemonModel pokemon_model = await Api.getPokemon(text);
+    EvolutionModel evolution_model =
+        await Api.getEvolution(pokemon_model.species.url);
+
+    pokemonEvolution.add(Pokemon.createPokemon(
+        pokemon_model, evolution_model, pokemonEvolution));
   }
 
   @override

@@ -16,6 +16,16 @@ class PokemonBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    for (var i = 0; i < pokemon.evolution_model.chain.evolvesTo.length; i++) {
+      for (var j = 0;
+          j < pokemon.evolution_model.chain.evolvesTo[i].evolvesTo.length;
+          j++) {
+        print(pokemon
+            .evolution_model.chain.evolvesTo[i].evolvesTo[j].species.name);
+      }
+      print(pokemon.evolution_model.chain.evolvesTo[i].species.name);
+    }
+
     return ListView(
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
@@ -81,10 +91,10 @@ class PokemonBody extends StatelessWidget {
                 height: deviceHeight * 0.2,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
-                  itemCount: 3,
+                  itemCount: pokemon.pokemon_evolutions.length,
                   itemBuilder: (context, index) {
                     return ResultCard(
-                      pokemon: pokemon,
+                      pokemon: pokemon.pokemon_evolutions[index],
                     );
                   },
                 ),

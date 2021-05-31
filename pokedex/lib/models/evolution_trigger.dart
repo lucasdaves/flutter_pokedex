@@ -1,8 +1,8 @@
 class Trigger {
-  String? name;
-  String? url;
+  late String name;
+  late String url;
 
-  Trigger({this.name, this.url});
+  Trigger({required this.name, required this.url});
 
   Trigger.fromJson(Map<String, dynamic> json) {
     name = json['name'];

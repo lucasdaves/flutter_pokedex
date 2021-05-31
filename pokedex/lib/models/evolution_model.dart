@@ -1,15 +1,18 @@
 import 'evolution_chain.dart';
 
 class EvolutionModel {
-  String? babyTriggerItem;
-  Chain? chain;
-  int? id;
+  late String babyTriggerItem;
+  late Chain chain;
+  late int id;
 
-  EvolutionModel({this.babyTriggerItem, this.chain, this.id});
+  EvolutionModel(
+      {required this.babyTriggerItem, required this.chain, required this.id});
 
   EvolutionModel.fromJson(Map<String, dynamic> json) {
-    babyTriggerItem = json['baby_trigger_item'];
-    chain = json['chain'] != null ? new Chain.fromJson(json['chain']) : null;
+    babyTriggerItem = json['baby_trigger_item'].toString();
+    if (json['chain'] != null) {
+      chain = new Chain.fromJson(json['chain']);
+    }
     id = json['id'];
   }
 }

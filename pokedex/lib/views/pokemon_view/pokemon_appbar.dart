@@ -38,7 +38,8 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(barIcon, size: barIconSize),
         onPressed: () =>
-            Navigator.popUntil(context, ModalRoute.withName("/home_page")),
+            //Navigator.popUntil(context, ModalRoute.withName("/home_page")),
+            Navigator.pop(context),
       ),
       actions: [
         IconButton(
