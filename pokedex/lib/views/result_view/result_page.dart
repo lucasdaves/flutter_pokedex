@@ -52,6 +52,7 @@ class _ResultPageState extends State<ResultPage> {
       pokemonBloc.streamSinglePokemon(text).catchError((_) {
         if (mounted) {
           setState(() {
+            firstRequest = false;
             error = true;
           });
         }
@@ -100,7 +101,8 @@ class _ResultPageState extends State<ResultPage> {
               ),
             );
           } else {
-            if (snapshot.hasData && pagination == true) {
+            if (snapshot.hasData &&
+                (pagination == true || firstRequest == true)) {
               return Scaffold(
                 appBar: ResultBar(
                   barCounter: (pageIndex + 1).toString(),

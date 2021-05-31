@@ -35,7 +35,8 @@ class ResultCard extends StatelessWidget {
                       radius: 35,
                       backgroundColor: Colors.white,
                       backgroundImage: NetworkImage(
-                          pokemon.pokemon_model.sprites.frontDefault),
+                        pokemon.pokemon_model.sprites.frontDefault,
+                      ),
                     ),
                   ),
                 ),
