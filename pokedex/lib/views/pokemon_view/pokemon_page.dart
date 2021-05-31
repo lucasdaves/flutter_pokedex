@@ -9,6 +9,8 @@ class PokemonPage extends StatefulWidget {
 }
 
 class _PokemonPageState extends State<PokemonPage> {
+  bool chain_loaded = false;
+
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;

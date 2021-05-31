@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pokedex/controllers/api/api.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/views/pokemon_view/pokemon_chart.dart';
 import 'package:pokedex/views/result_view/result_card.dart';
 
-class PokemonBody extends StatelessWidget {
+class PokemonBody extends StatefulWidget {
   final double deviceWidth;
   final double deviceHeight;
   final Pokemon pokemon;
@@ -15,15 +16,56 @@ class PokemonBody extends StatelessWidget {
   });
 
   @override
+  _PokemonBodyState createState() => _PokemonBodyState();
+}
+
+class _PokemonBodyState extends State<PokemonBody> {
+  bool chain_loaded = false;
+
+  @override
   Widget build(BuildContext context) {
-    for (var i = 0; i < pokemon.evolution_model.chain.evolvesTo.length; i++) {
-      for (var j = 0;
-          j < pokemon.evolution_model.chain.evolvesTo[i].evolvesTo.length;
-          j++) {
-        print(pokemon
-            .evolution_model.chain.evolvesTo[i].evolvesTo[j].species.name);
+    Api.getChain(widget.pokemon.evolution_model).then((List<Pokemon> list) {
+      if (mounted) {
+        setState(() {
+          widget.pokemon.evolution_chain = list;
+          chain_loaded = true;
+        });
       }
-      print(pokemon.evolution_model.chain.evolvesTo[i].species.name);
+    });
+
+    dynamic chain() {
+      if (chain_loaded) {
+        return ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: widget.pokemon.evolution_chain.length,
+          itemBuilder: (context, index) {
+            return ResultCard(
+              pokemon: widget.pokemon.evolution_chain[index],
+            );
+          },
+        );
+      } else {
+        return Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              CircularProgressIndicator(color: Colors.redAccent.shade400),
+              Text(
+                'Procurando',
+                style: TextStyle(
+                  color: Colors.redAccent.shade400,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     }
 
     return ListView(
@@ -32,7 +74,7 @@ class PokemonBody extends StatelessWidget {
       children: <Widget>[
         Container(
           margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-          width: deviceWidth,
+          width: widget.deviceWidth,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +88,8 @@ class PokemonBody extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: deviceWidth * 0.03,
-                height: deviceHeight * 0.03,
+                width: widget.deviceWidth * 0.03,
+                height: widget.deviceHeight * 0.03,
               ),
               Text(
                 'Peso',
@@ -58,11 +100,11 @@ class PokemonBody extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: deviceWidth * 0.01,
-                height: deviceHeight * 0.01,
+                width: widget.deviceWidth * 0.01,
+                height: widget.deviceHeight * 0.01,
               ),
               Text(
-                '${pokemon.pokemon_model.weight.toString()} KG',
+                '${widget.pokemon.pokemon_model.weight.toString()} KG',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -70,8 +112,8 @@ class PokemonBody extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: deviceWidth * 0.03,
-                height: deviceHeight * 0.03,
+                width: widget.deviceWidth * 0.03,
+                height: widget.deviceHeight * 0.03,
               ),
               Text(
                 'Evoluções',
@@ -82,27 +124,13 @@ class PokemonBody extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: deviceWidth * 0.03,
-                height: deviceHeight * 0.03,
+                width: widget.deviceWidth * 0.03,
+                height: widget.deviceHeight * 0.03,
               ),
-              Divider(),
+              chain(),
               SizedBox(
-                width: deviceWidth * 0.9,
-                height: deviceHeight * 0.2,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: pokemon.pokemon_evolutions.length,
-                  itemBuilder: (context, index) {
-                    return ResultCard(
-                      pokemon: pokemon.pokemon_evolutions[index],
-                    );
-                  },
-                ),
-              ),
-              Divider(),
-              SizedBox(
-                width: deviceWidth * 0.03,
-                height: deviceHeight * 0.03,
+                width: widget.deviceWidth * 0.03,
+                height: widget.deviceHeight * 0.03,
               ),
               Text(
                 'Status Base',
@@ -113,8 +141,8 @@ class PokemonBody extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: deviceWidth * 0.02,
-                height: deviceHeight * 0.02,
+                width: widget.deviceWidth * 0.02,
+                height: widget.deviceHeight * 0.02,
               ),
               Divider(),
               SingleChildScrollView(
@@ -122,14 +150,14 @@ class PokemonBody extends StatelessWidget {
                 child: Container(
                     alignment: Alignment.bottomCenter,
                     padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                    width: deviceWidth * 1.2,
-                    height: deviceHeight * 0.3,
-                    child: BarChartSample3(pokemon: pokemon)),
+                    width: widget.deviceWidth * 1.2,
+                    height: widget.deviceHeight * 0.3,
+                    child: BarChartSample3(pokemon: widget.pokemon)),
               ),
               Divider(),
               SizedBox(
-                width: deviceWidth * 0.03,
-                height: deviceHeight * 0.03,
+                width: widget.deviceWidth * 0.03,
+                height: widget.deviceHeight * 0.03,
               ),
               Text(
                 'Habilidades',
@@ -140,13 +168,13 @@ class PokemonBody extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: deviceWidth * 0.01,
-                height: deviceHeight * 0.01,
+                width: widget.deviceWidth * 0.01,
+                height: widget.deviceHeight * 0.01,
               ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: pokemon.pokemon_model.abilities.length,
+                itemCount: widget.pokemon.pokemon_model.abilities.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -160,11 +188,12 @@ class PokemonBody extends StatelessWidget {
                           size: 12,
                         ),
                         SizedBox(
-                          width: deviceWidth * 0.03,
-                          height: deviceHeight * 0.03,
+                          width: widget.deviceWidth * 0.03,
+                          height: widget.deviceHeight * 0.03,
                         ),
                         Text(
-                          pokemon.pokemon_model.abilities[index].ability.name,
+                          widget.pokemon.pokemon_model.abilities[index].ability
+                              .name,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -177,8 +206,8 @@ class PokemonBody extends StatelessWidget {
                 },
               ),
               SizedBox(
-                width: deviceWidth * 0.03,
-                height: deviceHeight * 0.03,
+                width: widget.deviceWidth * 0.03,
+                height: widget.deviceHeight * 0.03,
               ),
               Text(
                 'Movimentos',
@@ -189,13 +218,13 @@ class PokemonBody extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: deviceWidth * 0.01,
-                height: deviceHeight * 0.01,
+                width: widget.deviceWidth * 0.01,
+                height: widget.deviceHeight * 0.01,
               ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: pokemon.pokemon_model.moves.length,
+                itemCount: widget.pokemon.pokemon_model.moves.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -209,11 +238,11 @@ class PokemonBody extends StatelessWidget {
                           size: 12,
                         ),
                         SizedBox(
-                          width: deviceWidth * 0.03,
-                          height: deviceHeight * 0.03,
+                          width: widget.deviceWidth * 0.03,
+                          height: widget.deviceHeight * 0.03,
                         ),
                         Text(
-                          pokemon.pokemon_model.moves[index].move.name,
+                          widget.pokemon.pokemon_model.moves[index].move.name,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

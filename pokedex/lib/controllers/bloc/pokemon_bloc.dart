@@ -8,31 +8,28 @@ import 'package:rxdart/rxdart.dart';
 
 class PokemonBloc extends BlocBase {
   late List<Pokemon> pokemon = [];
-  late List<Pokemon> pokemonEvolution = [];
 
   late var pokemonStream = BehaviorSubject<List<Pokemon>>();
 
   Future<void> streamSinglePokemon(String text) async {
     pokemonStream = BehaviorSubject<List<Pokemon>>();
 
-    PokemonModel pokemon_model = await Api.getPokemon(text);
-    EvolutionModel evolution_model =
-        await Api.getEvolution(pokemon_model.species.url);
+    PokemonModel pokemon_model;
+    EvolutionModel evolution_model;
+    List<Pokemon> evolution_chain = [];
 
-    pokemonEvolution.clear();
+    pokemon_model = await Api.getPokemon(text);
+    evolution_model = await Api.getEvolution(pokemon_model.species.url);
+    //evolution_chain = await Api.getChain(evolution_model);
+
     pokemon.clear();
-
-    for (var evolution1 in evolution_model.chain.evolvesTo) {
-      if (evolution1 != null) {
-        for (var evolution2 in evolution1.evolvesTo) {
-          getEvolution(evolution2.species.name);
-        }
-      }
-      getEvolution(evolution1.species.name);
-    }
-
-    pokemon.add(Pokemon.createPokemon(
-        pokemon_model, evolution_model, pokemonEvolution));
+    pokemon.add(
+      Pokemon.createPokemon(
+        pokemon_model,
+        evolution_model,
+        evolution_chain,
+      ),
+    );
 
     pokemonStream.sink.add(pokemon);
   }
@@ -40,28 +37,23 @@ class PokemonBloc extends BlocBase {
   Future<void> streamMultiplePokemon() async {
     pokemonStream = BehaviorSubject<List<Pokemon>>();
 
-    ListPokemon pokemonList = await Api.getPokemonList();
     pokemon.clear();
 
+    PokemonModel pokemon_model;
+    EvolutionModel evolution_model;
+    List<Pokemon> evolution_chain = [];
+
+    ListPokemon pokemonList = await Api.getPokemonList();
+
     for (int i = 0; i < pokemonList.results.length; i++) {
-      PokemonModel pokemon_model =
-          await Api.getPokemon(pokemonList.results[i].name.toString());
-      EvolutionModel evolution_model =
-          await Api.getEvolution(pokemon_model.species.url);
+      pokemon_model = await Api.getPokemon(pokemonList.results[i].name);
+      evolution_model = await Api.getEvolution(pokemon_model.species.url);
+      //evolution_chain = await Api.getChain(evolution_model);
 
       pokemon.add(Pokemon.createPokemon(
-          pokemon_model, evolution_model, pokemonEvolution));
+          pokemon_model, evolution_model, evolution_chain));
     }
     pokemonStream.sink.add(pokemon);
-  }
-
-  Future<void> getEvolution(String text) async {
-    PokemonModel pokemon_model = await Api.getPokemon(text);
-    EvolutionModel evolution_model =
-        await Api.getEvolution(pokemon_model.species.url);
-
-    pokemonEvolution.add(Pokemon.createPokemon(
-        pokemon_model, evolution_model, pokemonEvolution));
   }
 
   @override

@@ -41,21 +41,27 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
             //Navigator.popUntil(context, ModalRoute.withName("/home_page")),
             Navigator.pop(context),
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.star_border, size: barIconSize, color: barIconColor),
-          onPressed: () {
-            final snackBar = SnackBar(
-              content: Text('Pokemon Favoritado !'),
-              action: SnackBarAction(
-                label: 'Minimizar',
-                onPressed: () {},
-              ),
-            );
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          },
+      bottom: PreferredSize(
+        child: Container(
+          alignment: Alignment.bottomRight,
+          padding: EdgeInsets.fromLTRB(0, 0, 30, 30),
+          child: IconButton(
+            icon:
+                Icon(Icons.star_border, size: barIconSize, color: barIconColor),
+            onPressed: () {
+              final snackBar = SnackBar(
+                content: Text('Pokemon Favoritado !'),
+                action: SnackBarAction(
+                  label: 'Minimizar',
+                  onPressed: () {},
+                ),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            },
+          ),
         ),
-      ],
+        preferredSize: Size.fromHeight(barIconSize),
+      ),
       flexibleSpace: Padding(
         padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
         child: Row(
