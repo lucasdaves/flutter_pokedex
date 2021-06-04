@@ -19,11 +19,10 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   final textfildController = TextEditingController();
+  final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
 
   @override
   Widget build(BuildContext context) {
-    final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
-
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
@@ -85,10 +84,11 @@ class _HomeBodyState extends State<HomeBody> {
               text: 'PESQUISAR',
               onClick: () {
                 if (textfildController.text.isNotEmpty) {
+                  pokemonBloc.requestType = 'single';
+                  pokemonBloc.requestText = textfildController.text;
                   Navigator.pushNamed(
                     context,
                     '/result_page',
-                    arguments: textfildController.text,
                   );
                 } else {
                   final snackBar = SnackBar(
@@ -113,10 +113,11 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.deepPurple,
               text: 'POKEVERSO',
               onClick: () {
+                pokemonBloc.requestType = 'multiple';
+                pokemonBloc.requestText = 'todos';
                 Navigator.pushNamed(
                   context,
                   '/result_page',
-                  arguments: 'todos',
                 );
               },
             ),
@@ -131,16 +132,13 @@ class _HomeBodyState extends State<HomeBody> {
               color: Colors.yellow.shade700,
               text: 'FAVORITOS',
               onClick: () {
-                if (pokemonBloc.favorite_pokemons.isEmpty) {
-                  final snackBar = SnackBar(
-                    content: Text('Você não tem pokemons favoritados !'),
-                    action: SnackBarAction(
-                      label: 'Minimizar',
-                      onPressed: () {},
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
+                pokemonBloc.requestType = 'favorite';
+                pokemonBloc.requestText = 'favoritos';
+                Navigator.pushNamed(
+                  context,
+                  '/result_page',
+                );
+                //}
               },
             ),
           ],

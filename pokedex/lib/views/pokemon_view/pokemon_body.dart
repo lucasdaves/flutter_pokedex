@@ -21,6 +21,7 @@ class PokemonBody extends StatefulWidget {
 
 class _PokemonBodyState extends State<PokemonBody> {
   bool chain_loaded = false;
+  final _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -145,14 +146,27 @@ class _PokemonBodyState extends State<PokemonBody> {
                 height: widget.deviceHeight * 0.02,
               ),
               Divider(),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                    alignment: Alignment.bottomCenter,
-                    padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                    width: widget.deviceWidth * 1.2,
-                    height: widget.deviceHeight * 0.3,
-                    child: BarChartSample3(pokemon: widget.pokemon)),
+              Scrollbar(
+                controller: _scrollController,
+                isAlwaysShown: true,
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                      alignment: Alignment.bottomCenter,
+                      padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                      width: widget.deviceWidth * 1.2,
+                      height: widget.deviceHeight * 0.3,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          0,
+                          widget.deviceHeight * 0.02,
+                          0,
+                          widget.deviceHeight * 0.02,
+                        ),
+                        child: BarChartSample3(pokemon: widget.pokemon),
+                      )),
+                ),
               ),
               Divider(),
               SizedBox(

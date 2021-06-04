@@ -1,4 +1,6 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex/controllers/bloc/pokemon_bloc.dart';
 
 class HomeTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -12,6 +14,8 @@ class HomeTextField extends StatelessWidget {
     required this.width,
     required this.height,
   });
+
+  final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,27 @@ class HomeTextField extends StatelessWidget {
             decoration: InputDecoration(
               hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
               hintText: textLabel,
-              suffixIcon: Icon(Icons.search),
+              suffixIcon: GestureDetector(
+                  onTap: () {
+                    if (controller.text.isNotEmpty) {
+                      pokemonBloc.requestType = 'single';
+                      pokemonBloc.requestText = controller.text;
+                      Navigator.pushNamed(
+                        context,
+                        '/result_page',
+                      );
+                    } else {
+                      final snackBar = SnackBar(
+                        content: Text('Digite o nome do pokemon !'),
+                        action: SnackBarAction(
+                          label: 'Minimizar',
+                          onPressed: () {},
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                  },
+                  child: Icon(Icons.search)),
               border: InputBorder.none,
             ),
           ),

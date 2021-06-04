@@ -1,6 +1,9 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex/controllers/bloc/pokemon_bloc.dart';
+import 'package:pokedex/models/pokemon.dart';
 
-class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
+class PokemonBar extends StatefulWidget implements PreferredSizeWidget {
   final NetworkImage pokemonImage;
   final double barHeight;
   final Color barColor;
@@ -13,6 +16,7 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData barIcon;
   final Color barIconColor;
   final double barIconSize;
+  final Pokemon pokemon;
 
   PokemonBar({
     required this.pokemonImage,
@@ -27,30 +31,93 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
     required this.barIcon,
     required this.barIconColor,
     required this.barIconSize,
+    required this.pokemon,
   });
+
+  final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
+
+  @override
+  _PokemonBarState createState() => _PokemonBarState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(barHeight);
+}
+
+class _PokemonBarState extends State<PokemonBar> {
+  dynamic favoriteIcon = Icons.star_border;
+  String snackBarText = "";
+
+  @override
+  initState() {
+    super.initState();
+
+    //pokemonBloc.resetFavoritePokemon();
+
+    for (var name in widget.pokemonBloc.pokemon_favorite) {
+      if (name == widget.pokemon.pokemon_model.name) {
+        favoriteIcon = Icons.star;
+        break;
+      } else
+        favoriteIcon = Icons.star_border;
+    }
+  }
+
+  changeFavorite() {
+    bool achou = false;
+
+    for (var name in widget.pokemonBloc.pokemon_favorite) {
+      if (name == widget.pokemon.pokemon_model.name) {
+        snackBarText = "Pokemon Removido dos favoritos !";
+        achou = true;
+        break;
+      } else {
+        snackBarText = "Pokemon Adicionado aos favoritos !";
+        achou = false;
+      }
+    }
+
+    if (achou) {
+      widget.pokemonBloc
+          .removeFavoritePokemon(widget.pokemon.pokemon_model.name)
+          .whenComplete(() => setState(() {
+                snackBarText = "Pokemon Adicionado aos favoritos !";
+                print(widget.pokemonBloc.pokemon_favorite);
+                favoriteIcon = Icons.star_border;
+              }));
+    } else {
+      widget.pokemonBloc
+          .addFavoritePokemon(widget.pokemon.pokemon_model.name)
+          .whenComplete(() => setState(() {
+                snackBarText = "Pokemon Removido dos favoritos !";
+                print(widget.pokemonBloc.pokemon_favorite);
+                favoriteIcon = Icons.star;
+              }));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: barColor,
+      backgroundColor: widget.barColor,
       elevation: 0.0,
       centerTitle: false,
       leading: IconButton(
-        icon: Icon(barIcon, size: barIconSize),
+        icon: Icon(widget.barIcon, size: widget.barIconSize),
         onPressed: () =>
-            //Navigator.popUntil(context, ModalRoute.withName("/home_page")),
-            Navigator.pop(context),
+            Navigator.popUntil(context, ModalRoute.withName("/result_page")),
       ),
       bottom: PreferredSize(
         child: Container(
           alignment: Alignment.bottomRight,
           padding: EdgeInsets.fromLTRB(0, 0, 30, 30),
           child: IconButton(
-            icon:
-                Icon(Icons.star_border, size: barIconSize, color: barIconColor),
+            icon: Icon(favoriteIcon,
+                size: widget.barIconSize, color: widget.barIconColor),
             onPressed: () {
+              changeFavorite();
+
               final snackBar = SnackBar(
-                content: Text('Pokemon Favoritado !'),
+                content: Text(snackBarText),
                 action: SnackBarAction(
                   label: 'Minimizar',
                   onPressed: () {},
@@ -60,7 +127,7 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
             },
           ),
         ),
-        preferredSize: Size.fromHeight(barIconSize),
+        preferredSize: Size.fromHeight(widget.barIconSize),
       ),
       flexibleSpace: Padding(
         padding: EdgeInsets.fromLTRB(20, 50, 20, 0),
@@ -75,7 +142,7 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
                 child: CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.redAccent.shade100,
-                  backgroundImage: pokemonImage,
+                  backgroundImage: widget.pokemonImage,
                 ),
               ),
             ),
@@ -84,17 +151,17 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  barTitle,
+                  widget.barTitle,
                   style: TextStyle(
-                    color: barTitleColor,
+                    color: widget.barTitleColor,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Tipo: $barSubTitle',
+                  'Tipo: ${widget.barSubTitle}',
                   style: TextStyle(
-                    color: barSubTitleColor,
+                    color: widget.barSubTitleColor,
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
                   ),
@@ -106,7 +173,4 @@ class PokemonBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(barHeight);
 }

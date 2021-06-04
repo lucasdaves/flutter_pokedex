@@ -1,4 +1,6 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex/controllers/bloc/pokemon_bloc.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/views/pokemon_view/pokemon_body.dart';
 import 'package:pokedex/views/pokemon_view/pokemon_appbar.dart';
@@ -10,6 +12,12 @@ class PokemonPage extends StatefulWidget {
 
 class _PokemonPageState extends State<PokemonPage> {
   bool chain_loaded = false;
+  final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +42,7 @@ class _PokemonPageState extends State<PokemonPage> {
         barIcon: Icons.close, //Alterar com API
         barIconColor: Colors.white,
         barIconSize: 40,
+        pokemon: pokemon,
       ),
       body: PokemonBody(
         deviceWidth: deviceWidth,
