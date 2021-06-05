@@ -16,6 +16,9 @@ class _HomePageState extends State<HomePage> {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
+    //pokemonBloc.resetFavoritePokemon();
+    //pokemonBloc.resetHistoryPokemon();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: GestureDetector(

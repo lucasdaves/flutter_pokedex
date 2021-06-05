@@ -45,53 +45,59 @@ class PokemonBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _PokemonBarState extends State<PokemonBar> {
   dynamic favoriteIcon = Icons.star_border;
-  String snackBarText = "";
+  String snackBarText = "Pokemon Adicionado aos favoritos !";
 
   @override
   initState() {
     super.initState();
-
-    //pokemonBloc.resetFavoritePokemon();
-
     for (var name in widget.pokemonBloc.pokemon_favorite) {
       if (name == widget.pokemon.pokemon_model.name) {
         favoriteIcon = Icons.star;
+        snackBarText = "Pokemon Adicionado aos favoritos !";
         break;
-      } else
+      } else {
         favoriteIcon = Icons.star_border;
+        snackBarText = "Pokemon Removido dos favoritos !";
+      }
     }
   }
 
   changeFavorite() {
     bool achou = false;
-
-    for (var name in widget.pokemonBloc.pokemon_favorite) {
-      if (name == widget.pokemon.pokemon_model.name) {
-        snackBarText = "Pokemon Removido dos favoritos !";
-        achou = true;
-        break;
-      } else {
-        snackBarText = "Pokemon Adicionado aos favoritos !";
-        achou = false;
+    if (widget.pokemonBloc.pokemon_favorite.length <
+        widget.pokemonBloc.favoriteLimit) {
+      for (var name in widget.pokemonBloc.pokemon_favorite) {
+        if (name == widget.pokemon.pokemon_model.name) {
+          snackBarText = "Pokemon Removido dos favoritos !";
+          achou = true;
+          break;
+        } else {
+          snackBarText = "Pokemon Adicionado aos favoritos !";
+          achou = false;
+        }
       }
-    }
 
-    if (achou) {
-      widget.pokemonBloc
-          .removeFavoritePokemon(widget.pokemon.pokemon_model.name)
-          .whenComplete(() => setState(() {
-                snackBarText = "Pokemon Adicionado aos favoritos !";
-                print(widget.pokemonBloc.pokemon_favorite);
-                favoriteIcon = Icons.star_border;
-              }));
+      if (achou) {
+        widget.pokemonBloc
+            .removeFavoritePokemon(widget.pokemon.pokemon_model.name)
+            .whenComplete(() => setState(() {
+                  snackBarText = "Pokemon Adicionado aos favoritos !";
+                  print(widget.pokemonBloc.pokemon_favorite);
+                  favoriteIcon = Icons.star_border;
+                }));
+      } else {
+        widget.pokemonBloc
+            .addFavoritePokemon(widget.pokemon.pokemon_model.name)
+            .whenComplete(() => setState(() {
+                  snackBarText = "Pokemon Removido dos favoritos !";
+                  print(widget.pokemonBloc.pokemon_favorite);
+                  favoriteIcon = Icons.star;
+                }));
+      }
     } else {
-      widget.pokemonBloc
-          .addFavoritePokemon(widget.pokemon.pokemon_model.name)
-          .whenComplete(() => setState(() {
-                snackBarText = "Pokemon Removido dos favoritos !";
-                print(widget.pokemonBloc.pokemon_favorite);
-                favoriteIcon = Icons.star;
-              }));
+      setState(() {
+        snackBarText = "Sua Lista de Pokemons está cheia !";
+      });
     }
   }
 
@@ -102,10 +108,16 @@ class _PokemonBarState extends State<PokemonBar> {
       elevation: 0.0,
       centerTitle: false,
       leading: IconButton(
-        icon: Icon(widget.barIcon, size: widget.barIconSize),
-        onPressed: () =>
-            Navigator.popUntil(context, ModalRoute.withName("/result_page")),
-      ),
+          icon: Icon(widget.barIcon, size: widget.barIconSize),
+          onPressed: () {
+            Navigator.popUntil(context, ModalRoute.withName("/result_page"));
+            if (widget.pokemonBloc.requestType != 'multiple') {
+              Navigator.popAndPushNamed(
+                context,
+                '/result_page',
+              );
+            }
+          }),
       bottom: PreferredSize(
         child: Container(
           alignment: Alignment.bottomRight,

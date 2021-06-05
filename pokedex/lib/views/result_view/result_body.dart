@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/controllers/bloc/pokemon_bloc.dart';
 import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/views/result_view/result_card.dart';
+import 'package:pokedex/views/result_view/result_favorite.dart';
 
 import 'result_history.dart';
 
@@ -21,11 +22,17 @@ class ResultBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
 
-    getHistory() {
+    getBottom() {
       if (pokemonBloc.requestType == 'single') {
         return SizedBox(
           height: deviceHeight * 0.3,
           child: ResultHistory(
+              deviceWidth: deviceWidth, deviceHeight: deviceHeight),
+        );
+      } else if (pokemonBloc.requestType == 'favorite') {
+        return SizedBox(
+          height: deviceHeight * 0.1,
+          child: ResultFavorite(
               deviceWidth: deviceWidth, deviceHeight: deviceHeight),
         );
       } else
@@ -46,7 +53,7 @@ class ResultBody extends StatelessWidget {
             },
           ),
         ),
-        getHistory(),
+        getBottom(),
       ],
     );
   }

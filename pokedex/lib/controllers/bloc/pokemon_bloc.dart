@@ -83,6 +83,8 @@ class PokemonBloc extends BlocBase {
   late String requestType;
   late String requestText;
 
+  late int favoriteLimit;
+
   late List<Pokemon> pokemons = [];
   late dynamic pokemonStream = BehaviorSubject<List<Pokemon>>();
 
@@ -92,11 +94,13 @@ class PokemonBloc extends BlocBase {
     pageIndex = 1;
     pageLimit = 15;
     pageOffset = pageIndex * pageLimit;
+    favoriteLimit = 20;
   }
 
   Future<void> streamSinglePokemon(String search) async {
     pageReady = false;
     pokemonStream = BehaviorSubject<List<Pokemon>>();
+    sharedPreferences = await SharedPreferences.getInstance();
 
     PokemonModel pokemon_model;
     EvolutionModel evolution_model;
@@ -122,6 +126,7 @@ class PokemonBloc extends BlocBase {
   Future<void> streamMultiplePokemon() async {
     pageReady = false;
     pokemonStream = BehaviorSubject<List<Pokemon>>();
+    sharedPreferences = await SharedPreferences.getInstance();
 
     pokemons.clear();
 
@@ -151,9 +156,9 @@ class PokemonBloc extends BlocBase {
   }
 
   Future<void> streamFavoritePokemon() async {
-    sharedPreferences = await SharedPreferences.getInstance();
     pageReady = false;
     pokemonStream = BehaviorSubject<List<Pokemon>>();
+    sharedPreferences = await SharedPreferences.getInstance();
 
     pokemons.clear();
 
@@ -162,7 +167,6 @@ class PokemonBloc extends BlocBase {
     List<Pokemon> evolution_chain = [];
 
     for (int i = 0; i < pokemon_favorite.length; i++) {
-      print(pokemon_favorite);
       pokemon_model = await Api.getPokemon(pokemon_favorite[i]);
       evolution_model = await Api.getEvolution(pokemon_model.species.url);
 
@@ -175,6 +179,8 @@ class PokemonBloc extends BlocBase {
       );
     }
     pokemonStream.sink.add(pokemons);
+
+    if (pokemon_favorite.isEmpty) pageFind = false;
 
     pageReady = true;
   }

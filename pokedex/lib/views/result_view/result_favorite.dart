@@ -2,20 +2,20 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/controllers/bloc/pokemon_bloc.dart';
 
-class ResultHistory extends StatefulWidget {
+class ResultFavorite extends StatefulWidget {
   final double deviceWidth;
   final double deviceHeight;
 
-  ResultHistory({
+  ResultFavorite({
     required this.deviceWidth,
     required this.deviceHeight,
   });
 
   @override
-  _ResultHistoryState createState() => _ResultHistoryState();
+  _ResultFavoriteState createState() => _ResultFavoriteState();
 }
 
-class _ResultHistoryState extends State<ResultHistory> {
+class _ResultFavoriteState extends State<ResultFavorite> {
   final pokemonBloc = BlocProvider.getBloc<PokemonBloc>();
 
   @override
@@ -47,12 +47,19 @@ class _ResultHistoryState extends State<ResultHistory> {
                     padding:
                         EdgeInsets.fromLTRB(widget.deviceWidth * 0.1, 0, 0, 0),
                     child: Text(
-                      'Histórico',
+                      'Pokemons',
                       style: TextStyle(
                           fontSize: widget.deviceWidth * 0.05,
                           fontWeight: FontWeight.bold,
                           color: Colors.indigo.shade900),
                     ),
+                  ),
+                  Text(
+                    '${pokemonBloc.pokemon_favorite.length}/${pokemonBloc.favoriteLimit}',
+                    style: TextStyle(
+                        fontSize: widget.deviceWidth * 0.05,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent.shade400),
                   ),
                   Padding(
                     padding:
@@ -60,8 +67,11 @@ class _ResultHistoryState extends State<ResultHistory> {
                     child: ElevatedButton(
                       onPressed: () {
                         pokemonBloc
-                            .resetHistoryPokemon()
-                            .whenComplete(() => setState(() {}));
+                            .resetFavoritePokemon()
+                            .whenComplete(() => setState(() {
+                                  Navigator.popAndPushNamed(
+                                      context, '/result_page');
+                                }));
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.white,
@@ -81,59 +91,6 @@ class _ResultHistoryState extends State<ResultHistory> {
                     ),
                   ),
                 ],
-              ),
-            ),
-            Divider(),
-            Flexible(
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: pokemonBloc.pokemon_history.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: widget.deviceHeight * 0.07,
-                    child: GestureDetector(
-                      onTap: () {
-                        pokemonBloc.requestType = 'single';
-                        pokemonBloc.requestText =
-                            pokemonBloc.pokemon_history[index];
-
-                        Navigator.popAndPushNamed(
-                          context,
-                          '/result_page',
-                        );
-                      },
-                      child: Card(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  widget.deviceWidth * 0.1, 0, 0, 0),
-                              child: Text(
-                                pokemonBloc.pokemon_history[index],
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  0, 0, widget.deviceWidth * 0.1, 0),
-                              child: Icon(
-                                Icons.timelapse,
-                                color: Colors.grey,
-                                size: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
               ),
             ),
           ],
