@@ -69,7 +69,7 @@ class _ResultPageState extends State<ResultPage> {
         if (pokemonBloc.pageFind == false) {
           return Scaffold(
             appBar: ResultBar(
-              barCounter: (pokemonBloc.pageIndex).toString(),
+              barCounter: (pokemonBloc.pageIndex + 1).toString(),
               barHeight: deviceHeight * 0.12,
               barColor: Colors.white,
               barTitle: 'Resultado da Pesquisa', //Alterar com API
@@ -108,7 +108,7 @@ class _ResultPageState extends State<ResultPage> {
           if (snapshot.hasData && pokemonBloc.pageReady == true) {
             return Scaffold(
               appBar: ResultBar(
-                barCounter: (pokemonBloc.pageIndex).toString(),
+                barCounter: (pokemonBloc.pageIndex + 1).toString(),
                 barHeight: deviceHeight * 0.12,
                 barColor: Colors.white,
                 barTitle: 'Resultado da Pesquisa', //Alterar com API
@@ -121,7 +121,7 @@ class _ResultPageState extends State<ResultPage> {
                 barIconSize: 40,
                 pagination: pagination,
                 leftAction: () {
-                  if (pokemonBloc.pageIndex > 1) {
+                  if (pokemonBloc.pageIndex > 0) {
                     pagination = false;
                     changePage(--pokemonBloc.pageIndex);
                   } else {
@@ -149,7 +149,7 @@ class _ResultPageState extends State<ResultPage> {
           } else {
             return Scaffold(
               appBar: ResultBar(
-                barCounter: (pokemonBloc.pageIndex).toString(),
+                barCounter: (pokemonBloc.pageIndex + 1).toString(),
                 barHeight: deviceHeight * 0.12,
                 barColor: Colors.white,
                 barTitle: 'Resultado da Pesquisa', //Alterar com API

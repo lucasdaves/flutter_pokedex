@@ -114,7 +114,7 @@ class _HomeBodyState extends State<HomeBody> {
                 height: widget.deviceHeight * 0.06,
                 fontSize: 22,
                 color: Colors.deepPurple,
-                text: 'POKEVERSO',
+                text: 'POKEVERSE',
                 onClick: () {
                   pokemonBloc.requestType = 'multiple';
                   pokemonBloc.requestText = 'todos';

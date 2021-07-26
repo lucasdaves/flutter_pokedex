@@ -13,7 +13,7 @@ class PokemonBloc extends BlocBase {
 
   ////===POKEMON_HISTORY===////
   late List<String> pokemon_history =
-      InternalMemory.read('history', sharedPreferences);
+      InternalMemory.read('history', sharedPreferences).reversed.toList();
 
   Future<void> addHistoryPokemon(String data) async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -22,7 +22,8 @@ class PokemonBloc extends BlocBase {
     aux.add(data);
     InternalMemory.save('history', sharedPreferences, aux);
 
-    pokemon_history = InternalMemory.read('history', sharedPreferences);
+    pokemon_history =
+        InternalMemory.read('history', sharedPreferences).reversed.toList();
   }
 
   Future<void> resetHistoryPokemon() async {
@@ -91,8 +92,8 @@ class PokemonBloc extends BlocBase {
   void initResultPage() {
     pageFind = true;
     pageReady = false;
-    pageIndex = 1;
-    pageLimit = 15;
+    pageIndex = 0;
+    pageLimit = 10;
     pageOffset = pageIndex * pageLimit;
     favoriteLimit = 20;
   }
