@@ -148,7 +148,7 @@ class _PokemonBodyState extends State<PokemonBody> {
               Divider(),
               Scrollbar(
                 controller: _scrollController,
-                isAlwaysShown: true,
+                thumbVisibility: true,
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   scrollDirection: Axis.horizontal,

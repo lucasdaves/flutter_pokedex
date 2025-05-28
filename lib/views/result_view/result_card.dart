@@ -21,6 +21,7 @@ class ResultCard extends StatelessWidget {
         width: deviceWidth,
         height: deviceHeight * 0.12,
         child: Card(
+          color: Colors.white,
           child: Center(
             child: Row(
               children: <Widget>[

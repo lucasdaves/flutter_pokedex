@@ -64,7 +64,7 @@ class _ResultHistoryState extends State<ResultHistory> {
                             .whenComplete(() => setState(() {}));
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
+                        backgroundColor: Colors.white,
                         side: BorderSide(
                           width: 2,
                           color: Colors.redAccent.shade400,
@@ -103,6 +103,7 @@ class _ResultHistoryState extends State<ResultHistory> {
                         );
                       },
                       child: Card(
+                        color: Colors.white,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,

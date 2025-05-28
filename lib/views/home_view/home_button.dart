@@ -26,7 +26,7 @@ class FunctionButton extends StatelessWidget {
         height: height,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: color,
+            backgroundColor: color,
             textStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
@@ -35,7 +35,10 @@ class FunctionButton extends StatelessWidget {
           onPressed: () {
             onClick();
           },
-          child: Text(text),
+          child: Text(
+            text,
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );

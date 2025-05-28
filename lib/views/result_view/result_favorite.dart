@@ -74,7 +74,7 @@ class _ResultFavoriteState extends State<ResultFavorite> {
                                 }));
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
+                        backgroundColor: Colors.white,
                         side: BorderSide(
                           width: 2,
                           color: Colors.redAccent.shade400,
